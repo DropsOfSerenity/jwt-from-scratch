@@ -1,7 +1,7 @@
 (function (module) {
   'use strict';
 
-  var appConfig = function($urlRouterProvider, $stateProvider) {
+  var appConfig = function($urlRouterProvider, $stateProvider, $httpProvider) {
     $stateProvider
       .state('main', {
         url: '/',
@@ -26,8 +26,11 @@
       });
 
     $urlRouterProvider.otherwise('/');
+
+    $httpProvider.interceptors.push('authInterceptor');
   };
 
   module.config(appConfig);
+  module.constant('API_URL', 'http://localhost:3000/');
 
 }(angular.module('jwtexperimentApp')));
