@@ -9,4 +9,4 @@
  * Main module of the application.
  */
 angular
-  .module('jwtexperimentApp', ['ui.router']);
+  .module('jwtexperimentApp', ['ui.router', 'ngAnimate']);
