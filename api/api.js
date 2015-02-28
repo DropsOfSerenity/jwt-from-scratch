@@ -21,7 +21,7 @@ app.post('/register', function(req, res) {
     password: user.password
   });
   newUser.save(function(err) {
-    res.status(200).json(newUser);
+    res.status(200).send(newUser.toJSON());
   });
 });
 
