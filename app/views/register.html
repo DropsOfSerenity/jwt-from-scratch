@@ -1,11 +1,28 @@
-<div class="register-container">
-  <h2>Register</h2>
-  <div class="box">
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <input type="password" placeholder="Confirm Password">
-    <button class="btn btn-default full-width">
-      <span class="glyphicon glyphicon-ok"></span>
-    </button>
+<form ng-submit="submit()" name="register" novalidate>
+  <div class="register-container">
+    <h2>Register</h2>
+    <div class="box">
+      <input name="email" ng-model="email" type="email"
+        required
+        placeholder="Email">
+      <p class="help-block"
+        ng-show="register.email.$dirty && register.email.$invalid">
+        Please enter a proper email
+      </p>
+      <input name="password" ng-model="password" type="password"
+        required
+        placeholder="Password">
+      <input name="password_confirmation" ng-model="password_confirm" type="password"
+        required
+        validate-equals="password"
+        placeholder="Confirm Password">
+      <p class="help-block"
+        ng-show="register.password_confirmation.$dirty && register.password_confirmation.$invalid">
+        please match the passwords.
+      </p>
+      <button ng-disabled="register.$invalid" class="btn btn-default full-width">
+        <span class="glyphicon glyphicon-ok"></span>
+      </button>
+    </div>
   </div>
-</div>
+</form>
