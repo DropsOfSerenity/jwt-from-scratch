@@ -8,6 +8,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -50,6 +51,11 @@
       <div ui-view></div>
     </div>
 
+    <div ng-cloak class="alert alert-{{alert.type}} animated main-alert"
+      ng-class="{'flipInY': alert.show, 'flipOutY': !alert.show, 'alert-hidden': !alert.hasBeenShown}">
+      <strong>{{alert.title}}</strong> {{alert.message}}
+    </div>
+
     <div class="footer">
       <div class="container">
       </div>
@@ -82,6 +88,7 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/directives/validateEquals.js"></script>
         <script src="scripts/controllers/register.js"></script>
+        <script src="scripts/services/alert.js"></script>
         <!-- endbuild -->
 </body>
 </html>
