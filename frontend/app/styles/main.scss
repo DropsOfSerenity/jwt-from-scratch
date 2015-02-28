@@ -139,6 +139,10 @@ h2 {
 }
 
 .main-alert {
+  position: absolute;
+  top: 100px;
+  left: 5px;
+  right: 5px;
   max-width: 400px;
   margin: 0 auto;
 }
@@ -179,5 +183,3 @@ h2 {
 [ui-view].ng-leave-active {
   opacity: 0;
 }
-
-
