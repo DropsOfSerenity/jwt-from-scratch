@@ -2,6 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var User = require('./models/User.js');
+var jwt = require('./services/jwt.js');
 
 var app = express();
 app.use(bodyParser.json());
@@ -20,8 +21,19 @@ app.post('/register', function(req, res) {
     email: user.email,
     password: user.password
   });
+
+  var payload = {
+    iss: req.hostname,
+    sub: user._id
+  };
+
+  var token = jwt.encode(payload, 'shhhhhh...');
+
   newUser.save(function(err) {
-    res.status(200).send(newUser.toJSON());
+    res.status(200).send({
+      user: newUser.toJSON(),
+      token: token
+    });
   });
 });
 
