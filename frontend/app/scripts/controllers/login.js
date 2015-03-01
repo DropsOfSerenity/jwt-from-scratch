@@ -1,9 +1,9 @@
 (function(module) {
   'use strict';
 
-  var RegisterCtrl = function ($scope, $http, alert, authToken, API_URL) {
+  var LoginCtrl = function ($scope, $http, alert, authToken, API_URL) {
     $scope.submit = function() {
-      var url = API_URL + 'register';
+      var url = API_URL + 'login';
       var user = {
         email: $scope.email,
         password: $scope.password
@@ -11,15 +11,15 @@
 
       $http.post(url, user)
       .success(function(res) {
-        alert('success', 'Account Created!', 'Welcome, ' + res.user.email + '!');
+        alert('success', 'Welcome', 'Thanks for coming back ' + res.user.email + '!');
         authToken.setToken(res.token);
       })
       .error(function(err) {
-        alert('warning', 'Oops!', 'Could not register.');
+        alert('warning', 'Something went wrong :(', err.message);
       });
     };
   };
 
-  module.controller('RegisterCtrl', RegisterCtrl);
+  module.controller('LoginCtrl', LoginCtrl);
 
 }(angular.module('jwtexperimentApp')));

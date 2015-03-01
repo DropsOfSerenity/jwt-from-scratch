@@ -1,3 +1,5 @@
+'use strict';
+
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 
@@ -13,7 +15,9 @@ UserSchema.methods.toJSON = function() {
   return user;
 };
 
-exports.model = mongoose.model('User', UserSchema);
+UserSchema.methods.comparePasswords = function(password, cb) {
+  bcrypt.compare(password, this.password, cb);
+};
 
 // middleware pre-save
 UserSchema.pre('save', function(next) {
@@ -32,3 +36,5 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+module.exports = mongoose.model('User', UserSchema);
