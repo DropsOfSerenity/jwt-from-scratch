@@ -5,9 +5,15 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var User = require('./models/User.js');
 var jwt = require('jwt-simple');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 app.use(bodyParser.json());
+app.use(passport.initialize());
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
 
 // custom middleware to enable CORS
 app.use(function(req, res, next) {
@@ -17,40 +23,55 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.post('/register', function(req, res) {
-  var user = req.body;
-  var newUser = new User({
-    email: user.email,
-    password: user.password
-  });
+var strategyOptions = {
+  usernameField: 'email'
+};
 
-  newUser.save(function(err) {
-    createToken(newUser, res);
-  });
-});
-
-app.post('/login', function(req, res) {
-  var reqUser = req.body;
-
-  var searchUser = {
-    email: reqUser.email
-  };
-
+var loginStrategy = new LocalStrategy(strategyOptions, function(email, password, done) {
+  var searchUser = {email: email};
   User.findOne(searchUser, function(err, user) {
-    if(err) throw err;
-    if(!user)
-      return res.status(401).send({message: 'Wrong email/password'});
+    if(err) return done(err);
+    if(!user) return done(null, false, {
+      message: 'Wrong email/password'
+    });
 
-    user.comparePasswords(reqUser.password, function(err, isMatch) {
-      if(err) throw err;
-      if(!isMatch)
-        return res.status(401).send({message: 'Wrong email/password'});
-      createToken(user, res);
+    user.comparePasswords(password, function(err, isMatch) {
+      if(err) return done(err);
+      if(!isMatch) {
+        return done(null, false, {
+          message: 'Wrong email/password'
+        });
+      }
+      return done(null, user);
     });
   });
 });
 
-function createToken(user, res) {
+var signupStrategy = new LocalStrategy(strategyOptions, function(email, password, done) {
+  var newUser = new User({
+    email: email,
+    password: password
+  });
+
+  newUser.save(function(err) {
+    if(err) return done(err);
+    done(null, newUser);
+  });
+
+});
+
+passport.use('local-login', loginStrategy);
+passport.use('local-register', signupStrategy);
+
+app.post('/register', passport.authenticate('local-register'), function(req, res) {
+  createAndSendToken(req.user, res);
+});
+
+app.post('/login', passport.authenticate('local-login'), function(req, res) {
+  createAndSendToken(req.user, res);
+});
+
+function createAndSendToken(user, res) {
   var payload = {
     sub: user.id
   };
