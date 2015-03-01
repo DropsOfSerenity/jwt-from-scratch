@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('jwtexperimentApp')
-  .service('auth', function($http, $state, API_URL, authToken, $window) {
+  .service('auth', function($q, $http, $state, API_URL, authToken, $window) {
 
     var GOOGLE_OAUTH_URL = 'https://accounts.google.com/o/oauth2/auth?';
 
@@ -36,6 +36,8 @@ angular.module('jwtexperimentApp')
       'scope=profile email');
 
     this.googleAuth = function() {
+      var deferred = $q.defer();
+
       var url = GOOGLE_OAUTH_URL + urlBuilder.join('&');
       var left = ($window.outerWidth - 500) / 2;
       var top = ($window.outerHeight - 500) / 2.5;
@@ -44,17 +46,25 @@ angular.module('jwtexperimentApp')
       var popup = $window.open(url, '', options);
       $window.focus();
 
-      $window.addEventListener('message', function(event) {
+      var handler = function(event) {
         if(event.origin === $window.location.origin) {
+          $window.removeEventListener('message', handler);
           popup.close();
           var code = event.data;
           $http.post(API_URL + 'auth/google', {
             code: code,
             clientId: GOOGLE_CLIENT_ID,
             redirectUri: $window.location.origin
+          })
+          .success(function(jwt) {
+            authSuccessful(jwt);
+            deferred.resolve(jwt);
           });
         }
-      });
+      };
+      $window.addEventListener('message', handler);
+
+      return deferred.promise;
     };
 
     return this;
