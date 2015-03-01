@@ -1,7 +1,7 @@
 (function (module) {
   'use strict';
 
-  var appConfig = function($urlRouterProvider, $stateProvider, $httpProvider) {
+  var appConfig = function($urlRouterProvider, $stateProvider, $httpProvider, $authProvider, API_URL) {
     $stateProvider
       .state('main', {
         url: '/',
@@ -32,6 +32,11 @@
       });
 
     $urlRouterProvider.otherwise('/');
+
+    $authProvider.google({
+      url: API_URL + 'auth/google',
+      clientId: '705480244411-hhcs39ogj3mlfilfbcfgtpjscq93fvpt.apps.googleusercontent.com'
+    });
 
     $httpProvider.interceptors.push('authInterceptor');
   };

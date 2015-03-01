@@ -8,6 +8,7 @@ var jwt = require('jwt-simple');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var request = require('request');
+var moment = require('moment');
 
 var app = express();
 app.use(bodyParser.json());
@@ -18,7 +19,8 @@ passport.serializeUser(function(user, done) {
 
 // custom middleware to enable CORS
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
@@ -80,7 +82,8 @@ app.post('/login', passport.authenticate('local-login'), function(req, res) {
 
 function createAndSendToken(user, res) {
   var payload = {
-    sub: user.id
+    sub: user.id,
+    exp: moment().add(10, 'days').unix()
   };
 
   var token = jwt.encode(payload, 'shhhhhh...');
