@@ -48,16 +48,22 @@ var loginStrategy = new LocalStrategy(strategyOptions, function(email, password,
 });
 
 var signupStrategy = new LocalStrategy(strategyOptions, function(email, password, done) {
-  var newUser = new User({
-    email: email,
-    password: password
-  });
-
-  newUser.save(function(err) {
+  var searchUser = {email: email};
+  User.findOne(searchUser, function(err, user) {
     if(err) return done(err);
-    done(null, newUser);
-  });
+    if(user) return done(null, false, {
+      message: 'Email already taken'
+    });
+    var newUser = new User({
+      email: email,
+      password: password
+    });
 
+    newUser.save(function(err) {
+      if(err) return done(err);
+      done(null, newUser);
+    });
+  });
 });
 
 passport.use('local-login', loginStrategy);
