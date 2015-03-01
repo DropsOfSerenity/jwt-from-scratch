@@ -1,18 +1,11 @@
 (function(module) {
   'use strict';
 
-  var LoginCtrl = function ($scope, $http, alert, authToken, API_URL) {
+  var LoginCtrl = function ($scope, alert, auth) {
     $scope.submit = function() {
-      var url = API_URL + 'login';
-      var user = {
-        email: $scope.email,
-        password: $scope.password
-      };
-
-      $http.post(url, user)
+      auth.login($scope.email, $scope.password)
       .success(function(res) {
         alert('success', 'Welcome', 'Thanks for coming back ' + res.user.email + '!');
-        authToken.setToken(res.token);
       })
       .error(function(err) {
         alert('warning', 'Something went wrong :(', err.message);
