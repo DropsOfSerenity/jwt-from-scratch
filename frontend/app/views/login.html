@@ -12,11 +12,14 @@
       <input name="password" ng-model="password" type="password"
         required
         placeholder="Password">
-      <button ng-disabled="login.$invalid" class="btn btn-default full-width">
+      <button ng-disabled="login.$invalid" class="btn btn-primary full-width">
         <span class="glyphicon glyphicon-ok"></span>
       </button>
       <br />
       <a class="text-muted pull-right" ui-sref="register">Create Account</a>
+      <button ng-click="google()" class="btn btn-default full-width" type="button">
+        Google
+      </button>
     </div>
   </div>
 </form>

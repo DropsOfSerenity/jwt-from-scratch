@@ -11,6 +11,10 @@
         alert('warning', 'Something went wrong :(', err.message);
       });
     };
+
+    $scope.google = function() {
+      auth.googleAuth().then();
+    };
   };
 
   module.controller('LoginCtrl', LoginCtrl);

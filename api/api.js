@@ -7,6 +7,7 @@ var User = require('./models/User.js');
 var jwt = require('jwt-simple');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var request = require('request');
 
 var app = express();
 app.use(bodyParser.json());
@@ -111,6 +112,24 @@ app.get('/jobs', function(req, res) {
   }
 
   res.json(jobs);
+});
+
+app.post('/auth/google', function(req, res) {
+  var url = 'https://accounts.google.com/o/oauth2/token';
+  var params = {
+    code: req.body.code,
+    client_id: req.body.clientId,
+    redirect_uri: req.body.redirectUri,
+    grant_type: 'authorization_code',
+    client_secret: 'ZKudk3Vx85nlaEATuVV9u9wP'
+  };
+
+  request.post(url, {
+    json: true,
+    form: params
+  }, function(err, res, token) {
+    console.log(token);
+  });
 });
 
 mongoose.connect('mongodb://localhost/jwtfromscratch');
