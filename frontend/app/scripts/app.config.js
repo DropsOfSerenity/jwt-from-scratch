@@ -38,6 +38,9 @@
       clientId: '705480244411-hhcs39ogj3mlfilfbcfgtpjscq93fvpt.apps.googleusercontent.com'
     });
 
+    $authProvider.loginUrl = API_URL + 'login';
+    $authProvider.signupUrl = API_URL + 'register';
+
     $httpProvider.interceptors.push('authInterceptor');
   };
 

@@ -3,11 +3,10 @@
 
   var LoginCtrl = function($scope, alert, auth, $auth) {
     $scope.submit = function() {
-      auth.login($scope.email, $scope.password)
-        .success(function(res) {
-          alert('success', 'Welcome', 'Thanks for coming back ' + res.user.email + '!');
-        })
-        .error(handleError);
+      $auth.login({email: $scope.email, password: $scope.password})
+      .then(function(res) {
+        alert('success', 'Welcome', 'Thanks for coming back ' + res.data.user.email + '!');
+      }).catch(handleError);
     };
 
     $scope.authenticate = function(provider) {
