@@ -40,6 +40,7 @@ app.post('/register', passport.authenticate('local-register'), function(req, res
   emailVerification.send(req.user.email, res);
   createAndSendToken(req.user, res);
 });
+app.get('/auth/verify/verifyEmail', emailVerification.handler);
 app.post('/login', passport.authenticate('local-login'), function(req, res) {
   createAndSendToken(req.user, res);
 });
