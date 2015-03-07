@@ -9,6 +9,9 @@ var googleAuth = require('./services/googleAuth.js');
 var createAndSendToken = require('./services/createAndSendToken.js');
 var localStrategy = require('./services/localStrategy.js');
 var jobs = require('./services/jobs.js');
+var emailVerification = require('./services/emailVerification.js');
+
+emailVerification.send('fake@fake.com');
 
 var app = express();
 app.use(bodyParser.json());
