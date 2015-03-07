@@ -11,8 +11,6 @@ var localStrategy = require('./services/localStrategy.js');
 var jobs = require('./services/jobs.js');
 var emailVerification = require('./services/emailVerification.js');
 
-emailVerification.send('fake@fake.com');
-
 var app = express();
 app.use(bodyParser.json());
 app.use(passport.initialize());
@@ -39,6 +37,7 @@ passport.use('local-register', localStrategy.signup);
  * AUTHENTICATION
  */
 app.post('/register', passport.authenticate('local-register'), function(req, res) {
+  emailVerification.send(req.user.email, res);
   createAndSendToken(req.user, res);
 });
 app.post('/login', passport.authenticate('local-login'), function(req, res) {
